@@ -61,8 +61,6 @@
 
 
 
-import { createServer } from "http";
-import { parse } from "url";
 import dotenv from "dotenv";
 import app from "./app.js";
 import dbconnect from "./config/dbconfig.js";
@@ -73,10 +71,10 @@ dotenv.config();
 // Connect to MongoDB
 dbconnect();
 
-// Create and export server
-const server = createServer((req, res) => {
-  const parsedUrl = parse(req.url, true);
-  app(req, res, parsedUrl);
+const port = process.env.PORT || 9000;
+
+// Start the server using app.listen() instead of createServer()
+app.listen(port, () => {
+  console.log(`Express server is running on http://localhost:${port}/api/v1`);
 });
 
-export default server;
