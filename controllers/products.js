@@ -16,7 +16,7 @@ const fetchProducts = asyncHandler ( async (req, res) => {
           const startIndex = (page - 1) * perPage;
           const endIndex = startIndex + perPage;
           const paginatedProducts = products.slice(startIndex, endIndex);      
-          JSON.stringify({
+          res.json({
             products: paginatedProducts,
             pagination: {
               currentPage: page,
@@ -27,7 +27,7 @@ const fetchProducts = asyncHandler ( async (req, res) => {
             },
           });
         } else {
-          JSON.stringify({
+          res.json({
             products,
             pagination: {},
           });
@@ -41,7 +41,7 @@ const fetchProducts = asyncHandler ( async (req, res) => {
 //     const product = await Product.findById(req.params.id);
 
 //     if(product){
-//         JSON.stringify( product );
+//         res.json( product );
 //     }
 //     else {
 //         res.status(404).send('Product not found.');
@@ -61,7 +61,7 @@ const fetchProduct = async (req, res) => {
   try {
       const product = await Product.findById(id);
       if (product) {
-          JSON.stringify(product);
+          res.json(product);
       } else {
           res.status(404).send('Product not found.');
       }

@@ -9,12 +9,12 @@ import User from '../models/users.js';
 const fetchUsers = async(req,res)=>{
     try {
         const users = await Users.find({});
-        JSON.stringify(users);
+        res.json(users);
 
        
     } catch (error) {
         console.error(error);
-        JSON.stringify({ error: 'something went wrong try again' });
+        res.json({ error: 'something went wrong try again' });
         
     }
 }
@@ -29,16 +29,16 @@ const blockandUnblock = async(req,res)=>{
             {$set:{status:req.body.status }},
             { new: true }
         )
-        JSON.stringify(user.status)
+        res.json(user.status)
         if(!user){
-            return JSON.stringify({ error: 'User not found' });
+            return res.json({ error: 'User not found' });
 
         }
 
        
     } catch (error) {
         console.error(error);
-        JSON.stringify({ error: 'something went wrong try again' });
+        res.json({ error: 'something went wrong try again' });
         
     }
 }

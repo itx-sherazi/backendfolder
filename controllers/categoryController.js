@@ -7,7 +7,7 @@ export const uploadProfileImage = async (req, res) => {
       return res.status(400).json({ message: "Image is required" });
     }
     const profileImagePath = req.file.path.replace(/\\/g, '/'); // Normalize path for Windows
-    return JSON.stringify({
+    return res.json({
       message: "Profile image uploaded successfully",
       profileImage: profileImagePath, // Return the full image path
     });
@@ -32,7 +32,7 @@ export const updateProfile = async (req, res) => {
       { new: true }
     );
 
-    JSON.stringify({ message: 'Profile updated successfully', user: updatedUser });
+    res.json({ message: 'Profile updated successfully', user: updatedUser });
   } catch (error) {
     console.error('Error updating profile:', error);
     res.status(500).json({ message: 'Internal server error' });
