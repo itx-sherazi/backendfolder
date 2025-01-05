@@ -17,19 +17,19 @@ export const preSignup = asyncHandler(async (req, res, next) => {
 
   // Email validation
   if (!validator.validate(email)) {
-    return res.json({ error: "A valid email address is required" });
+    return JSON.stringify({ error: "A valid email address is required" });
   }
 
   // Password validations
   const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&^_-])[A-Za-z\d@$!%*#?&^_-]{5,30}$/;
   if (!password) {
-    return res.json({ error: "Password is required" });
+    return JSON.stringify({ error: "Password is required" });
   }
   if (password.length < 5 || password.length > 30) {
-    return res.json({ error: "Password should be between 5 and 30 characters long" });
+    return JSON.stringify({ error: "Password should be between 5 and 30 characters long" });
   }
   if (!passwordRegex.test(password)) {
-    return res.json({
+    return JSON.stringify({
       error:
         "Password must contain at least one capital letter, one number, and one special character (excluding comma and period)",
     });
@@ -38,7 +38,7 @@ export const preSignup = asyncHandler(async (req, res, next) => {
   // Check if the user already exists
   const userExists = await User.findOne({ email });
   if (userExists) {
-    return res.json({
+    return JSON.stringify({
       error: "This email is already taken, please choose a different email address",
     });
   }
@@ -59,14 +59,14 @@ export const preSignup = asyncHandler(async (req, res, next) => {
     const verificationLink = `http://localhost:8080/api/v1/users/signup?token=${token}`;
     await SendVerificationLink(email, verificationLink);
 
-    return res.json({
+    return JSON.stringify({
       success: true,
       message: "Verification link has been sent to your email address",
       username, // Return the generated username
     });
   } catch (error) {
     console.error("Error sending verification link:", error);
-    return res.json({ error: "Failed to send verification link" });
+    return JSON.stringify({ error: "Failed to send verification link" });
   }
 });
 
@@ -198,13 +198,13 @@ export const login = asyncHandler(async (req, res, next) => {
 //     const { email } = req.body;
 //     /* 1. Email is required */
 //     if (!email) {
-//       return res.json({ error: "Email is required" });
+//       return JSON.stringify({ error: "Email is required" });
 //     }
 
 //     /* 2. find user with provided email */
 //     const user = await User.findOne({ email });
 //     if (!user) {
-//       res.json({
+//       JSON.stringify({
 //         error: `Could not find user with that email:${email}`,
 //       });
 //     } else {
@@ -254,13 +254,13 @@ export const forgotPassword = async (req, res) => {
     
     // 1. Email is required
     if (!email) {
-      return res.json({ error: "Email is required" });
+      return JSON.stringify({ error: "Email is required" });
     }
 
     // 2. Find user with the provided email
     const user = await User.findOne({ email });
     if (!user) {
-      return res.json({
+      return JSON.stringify({
         error: `Could not find user with that email: ${email}`,
       });
     }
@@ -338,10 +338,10 @@ export const loggedInUser = async (req, res) => {
     const user = await User.findById(req.user.id);
     user.password = undefined;
     user.resetCode = undefined;
-    res.json(user);
+    JSON.stringify(user);
   } catch (err) {
     console.log(err);
-    res.json({ error: "UnUserorized User" });
+    JSON.stringify({ error: "UnUserorized User" });
   }
 };
 
@@ -372,33 +372,33 @@ export const updatePassword = async (req, res) => {
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&^_-])[A-Za-z\d@$!%*#?&^_-]{5,30}$/;
 
     if (!oldPassword || !newPassword) {
-      return res.json({ error: "Both old and new passwords are required" });
+      return JSON.stringify({ error: "Both old and new passwords are required" });
     }
 
     if (newPassword.length < 5 || newPassword.length > 30) {
-      return res.json({ error: "Password should be between 5 and 30 characters long" });
+      return JSON.stringify({ error: "Password should be between 5 and 30 characters long" });
     }
 
     if (oldPassword == newPassword) {
-      return res.json({ error: "Old and New Password should not be same" });
+      return JSON.stringify({ error: "Old and New Password should not be same" });
     }
 
     // 3. Find the user by ID
     const user = await User.findById(req.user.id);
 
     if (!user) {
-      return res.json({ error: "User not found" });
+      return JSON.stringify({ error: "User not found" });
     }
 
     // 3. Check if the old password matches with stored db password
     const isMatch = await user.matchPasswords(oldPassword);
 
     if (!isMatch) {
-      return res.json({ error: "Old password is incorrect" });
+      return JSON.stringify({ error: "Old password is incorrect" });
     }
 
     if (!passwordRegex.test(newPassword)) {
-      return res.json({
+      return JSON.stringify({
         error:
           "Password must contain at least one capital letter, one number, and one special character (excluding comma and period)",
       });
@@ -409,9 +409,9 @@ export const updatePassword = async (req, res) => {
     user.password = newPassword;
     await user.save();
 
-    res.json({ ok: true, message: "Your password has been changed" });
+    JSON.stringify({ ok: true, message: "Your password has been changed" });
   } catch (err) {
-    res.json({ error: "An error occurred while updating the password" });
+    JSON.stringify({ error: "An error occurred while updating the password" });
   }
 };
 
@@ -422,13 +422,13 @@ export const updateProfile = async (req, res) => {
     const user = await User.findByIdAndUpdate(req.user.id, req.body, { new: true });
     user.password = undefined;
     user.resetCode = undefined;
-    res.json({ data: user });
+    JSON.stringify({ data: user });
   } catch (err) {
     console.log(err);
     if (err.codeName === "DuplicateKey") {
-      return res.json({ error: `Username or Email is already taken please chose different` });
+      return JSON.stringify({ error: `Username or Email is already taken please chose different` });
     } else {
-      return res.json({ error: "Un-Authorized User" });
+      return JSON.stringify({ error: "Un-Authorized User" });
     }
   }
 };

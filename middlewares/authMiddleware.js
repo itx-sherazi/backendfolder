@@ -10,7 +10,7 @@ export const requiredLoggedIn =  asyncHandler( (req, res, next) => {
         req.user = decoded;
         next();
     } else {
-        res.json({ error: 'Unauthorized: No token/Invalid provided.' });
+        JSON.stringify({ error: 'Unauthorized: No token/Invalid provided.' });
     }
 
 
@@ -21,7 +21,7 @@ export const checkAdmin = asyncHandler (( req, res, next) => {
     if(req.user && req.user.isAdmin){
         next();
     } else {
-        res.json({ error: 'You dont have access for this for page' });
+        JSON.stringify({ error: 'You dont have access for this for page' });
         throw new Error('You dont have access for this for page')
     }
 

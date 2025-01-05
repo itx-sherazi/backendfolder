@@ -6,9 +6,9 @@ const fetchUserOrders = asyncHandler(async (req, res) => {
 
     const orders = await Order.find({ user: req.params.id });
 	if (orders) {
-		res.json(orders);
+		JSON.stringify(orders);
 	} else {
-		res.json({ error: 'No orders could be found.' });
+		JSON.stringify({ error: 'No orders could be found.' });
 		throw new Error('No Orders found.');
 	}
 
@@ -16,13 +16,13 @@ const fetchUserOrders = asyncHandler(async (req, res) => {
 
 const fetchOrders = asyncHandler(async (req, res) => {
 	const orders = await Order.find({});
-	res.json(orders);
+	JSON.stringify(orders);
 });
 
 const deleteOrder = asyncHandler(async (req, res) => {
 	const order = await Order.findByIdAndDelete(req.params.id);
 	if (order) {
-		res.json(order);
+		JSON.stringify(order);
 	} else {
 		res.send('Order not found.');
 		throw new Error('Order not found.');
@@ -35,7 +35,7 @@ const setDelivered = asyncHandler(async (req, res) => {
 	if (order) {
 		order.isDelivered = true;
 		const updatedOrder = await order.save();
-		res.json(updatedOrder);
+		JSON.stringify(updatedOrder);
 	} else {
 		res.send('Order could not be uploaded.');
 		throw new Error('Order could not be updated.');

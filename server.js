@@ -15,14 +15,14 @@
  import morgan from "morgan";
 
  app.use(cors());
- app.use(express.json({limit: "12mb"}));
+ app.use(express.json({ limit: "50mb" }));  // Increase the limit
+
  app.use(morgan("dev"));
  /*-- middleware imports end --*/
 
 /* Test the server start */
  app.get("/api/v1", (req, res) =>{
       res.send('API is up & running!');
-      console.log('API is up & running!');
  });   
  app.get('/favicon.ico', (req, res) => res.status(204));
 /* Test the server end */
